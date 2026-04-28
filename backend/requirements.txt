@@ -1,0 +1,7 @@
+fastapi
+uvicorn
+scikit-learn>=1.0
+joblib
+pydantic
+python-dotenv
+httpx
