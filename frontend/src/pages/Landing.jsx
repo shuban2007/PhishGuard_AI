@@ -293,7 +293,7 @@ const Landing = () => {
               </p>
             </div>
             <a
-              href="https://github.com/shrivastavanurag648/phishguard-ai"
+              href="https://github.com/shuban2007/PhishGuard_AI"
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 px-6 py-3 bg-white/10 hover:bg-white/20 border border-white/10 hover:border-white/20 text-white font-semibold rounded-full transition-all w-fit text-sm"

@@ -12,6 +12,7 @@ Fail-safe architecture: always returns a result, never crashes.
 """
 
 import os
+import re
 import logging
 import joblib
 from contextlib import asynccontextmanager
@@ -32,6 +33,7 @@ from utils.trusted_domains import (
     get_trusted_domain_count,
     trusted_domains,
 )
+from utils.keyword_intelligence import keyword_intelligence, compute_final_score
 
 load_dotenv()
 
@@ -204,27 +206,173 @@ def health_check():
 
 @app.post("/scan-message")
 def scan_message(request: MessageRequest):
+    """
+    Hybrid intelligent message scanner — Keyword Intelligence Pipeline:
+
+    STEP 1: ML model prediction (probabilistic scoring)
+    STEP 2: Keyword Intelligence Engine (weighted SCAM/SAFE scoring)
+    STEP 3: Context-aware combination boosting
+    STEP 4: False positive reduction
+    STEP 5: ML + keyword score blending
+    STEP 6: NLP intent classification
+    STEP 7: Smart classification + explainable output
+    """
     msg = request.message.strip()
     if not msg:
         return JSONResponse(status_code=400, content={"detail": "Message cannot be empty"})
 
-    # ── Layer 1: ML model ─────────────────────────────────────────────────
+    msg_lower = msg.lower()
+    detection_layers: list[str] = []
+
+    # ══════════════════════════════════════════════════════════════════════
+    # STEP 1 — ML PREDICTION
+    # ══════════════════════════════════════════════════════════════════════
+    ml_probability: float | None = None
     if "text_model" in models and "vectorizer" in models:
         try:
-            vec      = models["vectorizer"].transform([msg.lower()])
+            vec = models["vectorizer"].transform([msg_lower])
             prob_arr = models["text_model"].predict_proba(vec)[0]
-            risk_score = int((prob_arr[1] if len(prob_arr) > 1 else prob_arr[0]) * 100)
-            prediction = "SCAM" if risk_score >= 50 else "SAFE"
-            return {"risk_score": risk_score, "prediction": prediction, "source": "ml"}
+            ml_probability = float(prob_arr[1] if len(prob_arr) > 1 else prob_arr[0])
+            detection_layers.append("ml")
+            logger.info("ML message probability → %.3f", ml_probability)
         except Exception as e:
             logger.error("Text ML error: %s", e)
+    else:
+        detection_layers.append("ml-unavailable")
 
-    # ── Layer 2: Keyword fallback ─────────────────────────────────────────
-    msg_lower  = msg.lower()
-    scam_hits  = [w for w in ["free", "win", "bonus", "prize", "click", "reward", "urgent", "verify"] if w in msg_lower]
-    risk_score = min(len(scam_hits) * 20, 95) if scam_hits else 10
-    prediction = "SCAM" if risk_score >= 50 else "SAFE"
-    return {"risk_score": risk_score, "prediction": prediction, "source": "rule-based"}
+    # ══════════════════════════════════════════════════════════════════════
+    # STEP 2–4 — KEYWORD INTELLIGENCE ENGINE
+    #   • Weighted SCAM/SAFE keyword scoring
+    #   • Context-aware combination boosting
+    #   • False positive reduction
+    # ══════════════════════════════════════════════════════════════════════
+    ki_result = keyword_intelligence(msg)
+    detection_layers.append("keyword-intelligence")
+
+    if ki_result.scam_signals:
+        detection_layers.append(f"scam-signals-{len(ki_result.scam_signals)}")
+    if ki_result.safe_signals:
+        detection_layers.append(f"safe-signals-{len(ki_result.safe_signals)}")
+    if ki_result.context_boosts:
+        detection_layers.append("context-boost")
+    if ki_result.false_positive_reductions:
+        detection_layers.append("fp-reduction")
+    if ki_result.has_link:
+        detection_layers.append("link-detected")
+
+    logger.info(
+        "KI Engine → score=%d, scam=%d, safe=%d, link=%s",
+        ki_result.keyword_score,
+        len(ki_result.scam_signals),
+        len(ki_result.safe_signals),
+        ki_result.has_link,
+    )
+
+    # ══════════════════════════════════════════════════════════════════════
+    # STEP 5 — ML + KEYWORD SCORE BLENDING
+    # ══════════════════════════════════════════════════════════════════════
+    risk_score, prediction, reasons = compute_final_score(
+        ml_probability, ki_result,
+    )
+
+    # ══════════════════════════════════════════════════════════════════════
+    # STEP 6 — NLP INTENT CLASSIFICATION
+    # ══════════════════════════════════════════════════════════════════════
+    INTENT_SIGNALS = {
+        "threatening": [
+            "legal action", "arrest", "warrant", "police", "blocked",
+            "penalty", "terminate", "disabled", "seized", "court",
+        ],
+        "transactional": [
+            "payment", "invoice", "receipt", "order", "purchase",
+            "transaction", "billing", "subscription", "pay",
+        ],
+        "promotional": [
+            "offer", "discount", "deal", "sale", "limited",
+            "exclusive", "special", "coupon", "promo",
+        ],
+        "informational": [
+            "update", "notice", "reminder", "scheduled",
+            "information", "confirm", "notification",
+        ],
+    }
+
+    detected_intent = "informational"
+    max_intent_hits = 0
+    for intent, signals in INTENT_SIGNALS.items():
+        hits = sum(1 for s in signals if s in msg_lower)
+        if hits > max_intent_hits:
+            max_intent_hits = hits
+            detected_intent = intent
+
+    # Intent-based fine-tuning (small adjustments on top of blended score)
+    if detected_intent == "threatening" and risk_score < 70:
+        risk_score = min(100, risk_score + 8)
+    elif detected_intent == "promotional" and ki_result.has_link and risk_score < 70:
+        risk_score = min(100, risk_score + 5)
+
+    # Re-classify after intent adjustments
+    if risk_score >= 71:
+        prediction = "SCAM"
+    elif risk_score >= 41:
+        prediction = "SUSPICIOUS"
+    else:
+        prediction = "SAFE"
+
+    # ══════════════════════════════════════════════════════════════════════
+    # STEP 7 — BUILD EXPLAINABLE RESPONSE
+    # ══════════════════════════════════════════════════════════════════════
+    # Build matched_patterns dict for frontend chip display
+    matched_patterns: dict[str, list[str]] = {}
+    if ki_result.scam_signals:
+        # Group scam signals by semantic category for UI
+        urgency_kw = {"urgent", "immediately", "action required", "act now",
+                      "expire", "hurry", "limited time", "asap", "right away",
+                      "don't delay", "final notice", "last chance"}
+        security_kw = {"verify", "verify your", "login", "suspended", "blocked",
+                       "otp", "password", "confirm your", "update your account",
+                       "unauthorized", "security alert", "unusual activity",
+                       "locked", "compromised", "breach", "reset your"}
+        reward_kw = {"win", "winner", "prize", "lottery", "gift", "free",
+                     "claim now", "claim your", "congratulations", "reward",
+                     "cash", "bonus", "selected", "lucky", "you have been chosen"}
+        threat_kw = {"legal action", "penalty", "arrest", "warrant", "police",
+                     "court", "sue", "terminate", "will be closed",
+                     "permanently disabled", "seized"}
+        financial_kw = {"bank", "account", "credit card", "debit card",
+                        "send money", "wire transfer", "routing number",
+                        "pay now", "payment", "bitcoin", "crypto", "gift card",
+                        "western union", "moneygram", "zelle", "venmo"}
+
+        for sig in ki_result.scam_signals:
+            if sig in urgency_kw:
+                matched_patterns.setdefault("financial_urgency", []).append(sig)
+            elif sig in security_kw:
+                matched_patterns.setdefault("security_triggers", []).append(sig)
+            elif sig in reward_kw:
+                matched_patterns.setdefault("reward_traps", []).append(sig)
+            elif sig in threat_kw:
+                matched_patterns.setdefault("threat_language", []).append(sig)
+            elif sig in financial_kw:
+                matched_patterns.setdefault("financial_request", []).append(sig)
+            else:
+                matched_patterns.setdefault("other", []).append(sig)
+
+    # Default reason for perfectly clean messages
+    if not reasons:
+        reasons.append("No suspicious patterns detected")
+
+    return {
+        "risk_score":       risk_score,
+        "prediction":       prediction,
+        "reasons":          reasons,
+        "intent":           detected_intent,
+        "matched_patterns": matched_patterns,
+        "keyword_score":    ki_result.keyword_score,
+        "scam_signals":     ki_result.scam_signals,
+        "safe_signals":     ki_result.safe_signals,
+        "source":           "+".join(detection_layers) if detection_layers else "baseline",
+    }
 
 
 @app.post("/scan-url")

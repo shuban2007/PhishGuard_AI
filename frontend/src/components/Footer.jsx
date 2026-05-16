@@ -32,6 +32,11 @@ const Footer = () => {
               <Link to="/scan-message" className="hover:text-white transition-colors">Scan Message</Link>
             </div>
             <div className="flex flex-col gap-2">
+              <p className="text-slate-300 font-semibold mb-1">Team</p>
+              <Link to="/about" className="hover:text-white transition-colors">About Us</Link>
+              <Link to="/contact" className="hover:text-white transition-colors">Contact</Link>
+            </div>
+            <div className="flex flex-col gap-2">
               <p className="text-slate-300 font-semibold mb-1">Legal</p>
               <Link to="/terms" className="hover:text-white transition-colors">Terms &amp; Conditions</Link>
               <Link to="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
@@ -39,7 +44,7 @@ const Footer = () => {
             <div className="flex flex-col gap-2">
               <p className="text-slate-300 font-semibold mb-1">Connect</p>
               <a
-                href="https://github.com/shrivastavanurag648/phishguard-ai"
+                href="https://github.com/shuban2007/PhishGuard_AI"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-1.5 hover:text-white transition-colors"
@@ -76,7 +81,7 @@ const Footer = () => {
             <Link to="/privacy" className="hover:text-slate-300 transition-colors">Privacy</Link>
             <span className="text-slate-700">·</span>
             <a
-              href="https://github.com/shrivastavanurag648/phishguard-ai"
+              href="https://github.com/shuban2007/PhishGuard_AI"
               target="_blank"
               rel="noopener noreferrer"
               className="hover:text-slate-300 transition-colors flex items-center gap-1"

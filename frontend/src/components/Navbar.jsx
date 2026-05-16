@@ -40,10 +40,10 @@ const Navbar = () => {
               <NavLink to="/" active={p === '/'}>Home</NavLink>
               <NavLink to="/scan-url" active={p === '/scan-url'}>Scan URL</NavLink>
               <NavLink to="/scan-message" active={p === '/scan-message'}>Scan Message</NavLink>
-              <NavLink to="/terms" active={p === '/terms'}>Terms</NavLink>
-              <NavLink to="/privacy" active={p === '/privacy'}>Privacy</NavLink>
+              <NavLink to="/about" active={p === '/about'}>About</NavLink>
+              <NavLink to="/contact" active={p === '/contact'}>Contact</NavLink>
               <a
-                href="https://github.com/shrivastavanurag648/phishguard-ai"
+                href="https://github.com/shuban2007/PhishGuard_AI"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="ml-2 px-3 py-2 rounded-md text-sm font-semibold text-slate-300 hover:bg-slate-800 hover:text-white transition-colors flex items-center gap-1.5"
@@ -71,8 +71,8 @@ const Navbar = () => {
               { to: '/', label: 'Home' },
               { to: '/scan-url', label: 'Scan URL' },
               { to: '/scan-message', label: 'Scan Message' },
-              { to: '/terms', label: 'Terms & Conditions' },
-              { to: '/privacy', label: 'Privacy Policy' },
+              { to: '/about', label: 'About' },
+              { to: '/contact', label: 'Contact' },
             ].map(({ to, label }) => (
               <Link
                 key={to}
@@ -86,7 +86,7 @@ const Navbar = () => {
               </Link>
             ))}
             <a
-              href="https://github.com/shrivastavanurag648/phishguard-ai"
+              href="https://github.com/shuban2007/PhishGuard_AI"
               target="_blank"
               rel="noopener noreferrer"
               className="px-3 py-2.5 rounded-md text-sm font-semibold text-slate-300 hover:bg-slate-800 hover:text-white transition-colors flex items-center gap-2"
