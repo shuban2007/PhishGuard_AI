@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { scanUrl } from '../api';
-import ResultCard from '../components/ResultCard';
+import UrlResultCard from '../components/UrlResultCard';
 import { Loader2, ShieldCheck, Lock, Zap, Info } from 'lucide-react';
 
 const UrlScanner = () => {
@@ -189,7 +189,7 @@ const UrlScanner = () => {
       <div className="max-w-4xl mx-auto px-4 pb-16">
         {result && !loading && (
           <div className="animate-in fade-in slide-in-from-bottom-4">
-            <ResultCard
+            <UrlResultCard
               score={result.risk_score}
               threatType={result.prediction}
               explanation={result.reason}

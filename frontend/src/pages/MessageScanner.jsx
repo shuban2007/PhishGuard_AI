@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { scanMessage } from '../api';
-import ResultCard from '../components/ResultCard';
+import MessageResultCard from '../components/MessageResultCard';
 import { Loader2, ShieldCheck, Lock, Cpu, Layers, Brain, Zap } from 'lucide-react';
 
 const MessageScanner = () => {
@@ -121,7 +121,7 @@ const MessageScanner = () => {
       <div className="w-full px-4 pb-16">
         {result && !loading && (
           <div className="animate-in fade-in slide-in-from-bottom-4 flex justify-center w-full">
-            <ResultCard
+            <MessageResultCard
               score={result.risk_score}
               threatType={result.prediction}
               reasons={result.reasons}

@@ -27,6 +27,7 @@ from utils.features import extract_features
 from utils.safebrowsing import check_safe_browsing
 from utils.trusted_domains import (
     is_trusted,
+    is_spoofed_domain,
     get_registered_domain,
     get_domain,
     learn_trusted_domain,
@@ -435,6 +436,20 @@ async def scan_url(request: UrlRequest):
             logger.warning("Safe Browsing unavailable — continuing with ML/rule fallback.")
         else:
             detection_layers.append("safe-browsing-clean")
+
+        # ══════════════════════════════════════════════════════════════════
+        # STEP 1.5: Spoof detection (catch impersonation attempts)
+        # ══════════════════════════════════════════════════════════════════
+        spoofed, impersonated = is_spoofed_domain(url)
+        if spoofed:
+            logger.warning("🎭 Spoof flagged: %s impersonates %s", url, impersonated)
+            return {
+                "url":        url,
+                "risk_score": 90,
+                "prediction": "PHISHING",
+                "reason":     f"Domain appears to impersonate a trusted service ({impersonated})",
+                "source":     "spoof-detection",
+            }
 
         # ══════════════════════════════════════════════════════════════════
         # STEP 2: Trusted domain database (eliminate false positives)
