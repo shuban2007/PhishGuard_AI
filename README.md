@@ -73,7 +73,7 @@ Final scoring and prediction
 # Setup Instructions
 Clone the repository
 
-git clone https://github.com/your username/PhishGuard_AI.git
+git clone https://github.com/your-username/PhishGuard_AI.git
 
 Navigate to project
 
