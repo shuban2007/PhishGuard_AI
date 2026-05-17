@@ -1,16 +1,31 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { scanUrl } from '../api';
 import ResultCard from '../components/ResultCard';
-import { Loader2, ShieldCheck, Lock, Zap } from 'lucide-react';
+import { Loader2, ShieldCheck, Lock, Zap, Info } from 'lucide-react';
 
 const UrlScanner = () => {
   const [url, setUrl] = useState('');
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState('');
+  const [selfDomainWarning, setSelfDomainWarning] = useState(false);
   // Track when the scan was triggered by the extension (for the auto-scan banner)
   const [autoScanned, setAutoScanned] = useState(false);
   const hasAutoScanned = useRef(false);
+
+  /**
+   * Check if the entered URL points to the same domain the app is running on.
+   */
+  const isSelfDomain = (inputUrl) => {
+    try {
+      const hostname = window.location.hostname;
+      if (!hostname || hostname === 'localhost' || hostname === '127.0.0.1') return false;
+      const parsed = new URL(inputUrl.startsWith('http') ? inputUrl : `https://${inputUrl}`);
+      return parsed.hostname === hostname || parsed.hostname.endsWith(`.${hostname}`);
+    } catch {
+      return false;
+    }
+  };
 
   /**
    * Core scan function.
@@ -20,6 +35,16 @@ const UrlScanner = () => {
   const handleScan = async (urlOverride) => {
     const target = typeof urlOverride === 'string' ? urlOverride : url;
     if (!target) return;
+
+    setSelfDomainWarning(false);
+
+    // Intercept self-domain scans
+    if (isSelfDomain(target)) {
+      setSelfDomainWarning(true);
+      setResult(null);
+      setError('');
+      return;
+    }
 
     setLoading(true);
     setError('');
@@ -93,7 +118,7 @@ const UrlScanner = () => {
               type="url"
               placeholder="https://example.com"
               value={url}
-              onChange={(e) => setUrl(e.target.value)}
+              onChange={(e) => { setUrl(e.target.value); setSelfDomainWarning(false); }}
               className="flex-grow px-6 py-4 bg-white text-slate-900 border-none outline-none text-lg rounded-xl md:rounded-l-full placeholder:text-slate-500 focus:ring-4 focus:ring-indigo-500/30 transition-all shadow-inner font-medium"
               required
             />
@@ -123,6 +148,19 @@ const UrlScanner = () => {
               No Logs Stored
             </div>
           </div>
+
+          {/* ── Self-domain warning ─────────────────────────────────────────── */}
+          {selfDomainWarning && (
+            <div className="mt-8 flex items-start gap-3 p-5 rounded-xl border border-indigo-500/30 bg-indigo-500/10 text-indigo-200 animate-in fade-in slide-in-from-bottom-2">
+              <Info className="w-5 h-5 text-indigo-400 shrink-0 mt-0.5" />
+              <div>
+                <p className="font-bold text-indigo-100 mb-1">This is your current site</p>
+                <p className="text-sm leading-relaxed">
+                  You're scanning PhishGuard AI's own domain — it's safe! Try scanning an external URL to check for phishing threats.
+                </p>
+              </div>
+            </div>
+          )}
 
           {/* ── Loading state (shown during auto-scan before result arrives) ── */}
           {loading && (
@@ -155,6 +193,7 @@ const UrlScanner = () => {
               score={result.risk_score}
               threatType={result.prediction}
               explanation={result.reason}
+              source={result.source}
             />
           </div>
         )}

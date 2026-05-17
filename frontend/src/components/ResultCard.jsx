@@ -30,7 +30,7 @@ const getGuidance = (score, isHighRisk, isMediumRisk) => {
   };
 };
 
-const ResultCard = ({ score, threatType, explanation, reasons, intent, matchedPatterns, keywordScore, scamSignals, safeSignals }) => {
+const ResultCard = ({ score, threatType, explanation, reasons, intent, matchedPatterns, keywordScore, scamSignals, safeSignals, source }) => {
   const [detailsOpen, setDetailsOpen] = useState(false);
 
   const isHighRisk = score >= 71 || threatType?.toLowerCase().includes('phishing') || threatType?.toLowerCase().includes('scam') || threatType?.toLowerCase().includes('malicious');
@@ -82,6 +82,14 @@ const ResultCard = ({ score, threatType, explanation, reasons, intent, matchedPa
         <Icon className={`w-16 h-16 mb-4 ${accentColor} drop-shadow-lg`} />
         <h2 className="text-3xl md:text-5xl font-extrabold tracking-tight mb-2">{headerText}</h2>
         <p className="text-lg text-white/60 font-medium">{threatType || 'Safe'}</p>
+
+        {/* Trusted Domain Badge */}
+        {source && (source === 'trusted-domain' || source.includes('trusted')) && (
+          <div className="mt-4 inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 font-semibold text-sm shadow-lg animate-in fade-in">
+            <ShieldCheck className="w-5 h-5 text-emerald-400" />
+            Verified Trusted Domain
+          </div>
+        )}
 
         {/* Risk Gauge */}
         <div className="mt-8">
@@ -215,7 +223,11 @@ const ResultCard = ({ score, threatType, explanation, reasons, intent, matchedPa
         <div className="px-8 pb-6">
           <div className="bg-black/15 p-5 rounded-xl text-sm leading-relaxed border-l-4 border-white/20">
             <span className="font-bold opacity-70 block mb-1.5 uppercase tracking-widest text-xs">Analysis Details</span>
-            <p className="opacity-90">{explanation}</p>
+            <p className="opacity-90">
+              {source && source.includes('trusted')
+                ? 'This is a verified trusted domain. No risk detected — this website is in our curated database of known legitimate sites.'
+                : explanation}
+            </p>
           </div>
         </div>
       )}

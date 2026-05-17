@@ -79,8 +79,25 @@ payment_domains = [
     "worldpay.com", "adyen.com",
 ]
 
+# ── Deployment / Hosting Platform Domains ────────────────────────────────────
+platform_domains = [
+    "netlify.app", "netlify.com",
+    "vercel.app", "vercel.com",
+    "railway.app",
+    "render.com", "onrender.com",
+    "herokuapp.com",
+    "pages.dev",            # Cloudflare Pages
+    "fly.dev",              # Fly.io
+    "surge.sh",
+    "github.io",
+    # PhishGuard AI's own deployed domains
+    "phishguardai-byslixcrew.netlify.app",
+]
+
 # ── Combined Set (mutable — supports auto-learning) ─────────────────────────
-trusted_domains: set[str] = set(top_domains + bank_domains + payment_domains)
+trusted_domains: set[str] = set(
+    top_domains + bank_domains + payment_domains + platform_domains
+)
 
 # Thread lock for safe concurrent writes during auto-learning
 _lock = threading.Lock()
