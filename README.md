@@ -75,7 +75,6 @@ Clone the repository
 
 git clone https://github.com/your username/PhishGuard_AI.git
 Navigate to project
-
 cd PhishGuard_AI
 Backend Setup
 cd backend
