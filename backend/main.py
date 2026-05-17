@@ -37,6 +37,9 @@ from utils.keyword_intelligence import keyword_intelligence, compute_final_score
 
 load_dotenv()
 
+# ── Railway / production port binding ────────────────────────────────────────
+PORT = int(os.getenv("PORT", 8000))
+
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -64,9 +67,10 @@ async def lifespan(app: FastAPI):
                 filename, e,
             )
     logger.info(
-        "🚀 PhishGuard AI ready | Models: %d/3 | Trusted domains: %d",
-        len(models), get_trusted_domain_count(),
+        "🚀 PhishGuard AI ready | Port: %d | Models: %d/3 | Trusted domains: %d",
+        PORT, len(models), get_trusted_domain_count(),
     )
+    print(f"Server starting on port {PORT}...")
     yield
     models.clear()
 
@@ -190,6 +194,12 @@ def label_from_score(score: int) -> str:
 
 
 # ── Endpoints ────────────────────────────────────────────────────────────────
+@app.get("/")
+def root_health():
+    """Root health check — used by Railway to verify the service is alive."""
+    return {"status": "running"}
+
+
 @app.get("/health")
 def health_check():
     return {

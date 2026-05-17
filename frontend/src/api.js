@@ -1,4 +1,5 @@
-const BASE_URL = "http://127.0.0.1:8000";
+// Use VITE_API_URL for production (Railway backend URL), fallback to localhost for dev
+const BASE_URL = (import.meta.env.VITE_API_URL || "http://127.0.0.1:8000").replace(/\/+$/, "");
 
 /**
  * Generic fetch wrapper — returns parsed JSON or throws a descriptive error.
@@ -14,7 +15,7 @@ async function apiFetch(path, body) {
   } catch (networkErr) {
     // Network failure (backend offline, CORS, etc.)
     throw new Error(
-      "Cannot reach the PhishGuard server. Make sure the backend is running on port 8000."
+      "Cannot reach the PhishGuard server. Check your connection or verify the backend is running."
     );
   }
 
