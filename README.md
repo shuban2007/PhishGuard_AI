@@ -1,120 +1,123 @@
 # PhishGuard AI
-Smart phishing detection for URLs and messages using machine learning and threat intelligence
+PhishGuard AI is a smart phishing detection system designed to analyze URLs and messages using a hybrid approach that combines machine learning, threat intelligence, and rule based analysis
 
-⭐ Star this repo if you found it useful
+# Overview
+PhishGuard AI helps users identify potentially harmful links and suspicious messages in real time The system is built to reduce phishing risks and improve online safety through accurate and explainable detection
 
-🚀 Overview
-PhishGuard AI is a hybrid cybersecurity system that analyzes websites and messages to detect phishing and scam attempts in real time
+# Key Features
+Hybrid detection system combining multiple layers
+Real time URL scanning with risk scoring
+SMS and message analysis with intent detection
+Google Safe Browsing integration for threat intelligence
+Machine learning based prediction models
+Keyword intelligence for scam pattern detection
+Trusted domain recognition to reduce false positives
+Fail safe architecture that always returns a result
 
-It combines machine learning, keyword intelligence, and trusted domain validation to provide accurate and explainable results
-
-✨ Features
-🔍 Real time URL scanning with risk scoring
-💬 Message and SMS scam detection
-🧠 Machine learning based predictions
-🌐 Google Safe Browsing integration
-🛡️ Trusted domain recognition
-⚡ Rule based and keyword intelligence system
-🔄 Fail safe architecture with guaranteed response
-📊 Clear and explainable results
-
-🧱 Tech Stack
+# Technology Stack
 Frontend
 React with Vite
 
 Backend
 FastAPI
 
-Machine Learning
-Scikit learn
+# Machine Learning
+Scikit learn models for URL and message classification
 
-APIs
-Google Safe Browsing
+# APIs
+Google Safe Browsing API
 
-Deployment
-Frontend on Netlify
-Backend on Render or Railway
+# Deployment
+Frontend hosted on Netlify
+Backend hosted on Render or Railway
 
-🧭 How It Works
-1 User submits a URL or message
-2 Frontend sends request to backend
-3 Backend processes using multiple detection layers
-4 Risk score and prediction are returned
-5 User sees clear result with explanation
+# System Architecture
+Frontend sends user input to backend API
+Backend processes input using multiple detection layers
+Results are returned with risk score prediction and explanation
 
-🔗 API Endpoints
-GET /
-Returns service status
+API Endpoints
+GET
+/
+Health check endpoint
 
-GET /health
-Returns system diagnostics
+GET
+/health
+Detailed system status
 
-POST /scan-url
+POST
+/scan url
 Analyzes a URL and returns risk score and prediction
 
-POST /scan-message
+POST
+/scan message
 Analyzes a message and returns scam likelihood and intent
 
-🧠 Detection System
-URL Analysis
+# Detection Pipeline
+URL Detection
 Safe Browsing check
 Trusted domain validation
 Machine learning prediction
-Rule based scoring
+Rule based analysis
 Keyword boosting
 Final classification
 
-Message Analysis
-Machine learning scoring
+# Message Detection
+Machine learning probability scoring
 Keyword intelligence engine
 Context aware boosting
 False positive reduction
-Intent detection
-Final classification
+Intent classification
+Final scoring and prediction
 
-⚙️ Setup
-Clone Repository
-git clone https://github.com/your-username/PhishGuard_AI.git
+# Setup Instructions
+Clone the repository
+
+git clone https://github.com/your username/PhishGuard_AI.git
+Navigate to project
+
 cd PhishGuard_AI
 Backend Setup
 cd backend
 pip install -r requirements.txt
-python -m uvicorn main:app --reload
+python -m uvicorn main app --reload
 Frontend Setup
 cd frontend
 npm install
 npm run dev
-🔐 Environment Variables
+Environment Variables
 Backend
 
-SAFE_BROWSING_API_KEY your_api_key
+SAFE_BROWSING_API_KEY your api key
+
 Frontend
 
-VITE_API_URL your_backend_url
-🖥️ Usage
-Enter a URL to check if it is safe
-Enter a message to detect scam patterns
-View risk score and explanation
+VITE_API_URL your backend url
 
-🛡️ Security Principles
-No user data stored
-Fail safe responses
-Trusted domain filtering
-Multi layer detection system
+# Usage
+Enter a URL to check if it is safe or malicious
+Enter a message to detect scam or phishing patterns
+Review risk score prediction and explanation
 
-📈 Future Improvements
+# Security Features
+No logs stored for user inputs
+Fail safe response system
+Trusted domain validation
+Multi layer detection to reduce false negatives
+
+# Future Improvements
 Browser extension integration
-Advanced NLP models
+Advanced NLP for message understanding
 User reporting system
-Real time threat updates
-Mobile application
+Real time threat database updates
+Mobile application support
 
-👥 Team
+# Team
 SlixCrew
 
 Focused on building useful and practical cybersecurity solutions
 Open to collaboration and new contributors
 
-📄 License
-For educational and research purposes
+# License
+This project is intended for educational and research purposes
 
