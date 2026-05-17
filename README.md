@@ -2,6 +2,7 @@
 Smart phishing detection for URLs and messages using machine learning and threat intelligence
 
 ⭐ Star this repo if you found it useful
+
 🚀 Overview
 PhishGuard AI is a hybrid cybersecurity system that analyzes websites and messages to detect phishing and scam attempts in real time
 
