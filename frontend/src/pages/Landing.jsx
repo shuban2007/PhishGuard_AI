@@ -4,7 +4,7 @@ import {
   Link2, MessageSquare, ShieldCheck, Lock, Zap,
   BrainCircuit, Globe, ListChecks, ScanLine, FileText,
   BarChart3, ArrowRight, CheckCircle, AlertTriangle, XCircle,
-  Github, Mail
+  Github, Mail, Puzzle, Download, Check
 } from 'lucide-react';
 
 /* ─── Reusable Pill Badge ─────────────────────────────────────────── */
@@ -233,6 +233,89 @@ const Landing = () => {
                   <p className="font-semibold text-indigo-300 mb-1">💡 Pro Tip</p>
                   Even a "Safe" result doesn't guarantee 100% safety. Always exercise caution with unexpected links or messages from unknown senders.
                 </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── SlixBlock Extension Section ───────────────────────────── */}
+      <section className="w-full py-16 px-4 relative z-10">
+        <div className="max-w-5xl mx-auto">
+          <div className="bg-gradient-to-br from-indigo-900/40 to-slate-900/80 backdrop-blur-xl border border-indigo-500/30 rounded-3xl p-8 md:p-12 shadow-[0_0_40px_rgba(79,70,229,0.15)] relative overflow-hidden flex flex-col md:flex-row items-center gap-10">
+            <div className="flex-1 space-y-6">
+              <Pill icon={Puzzle} color="bg-indigo-500/20 border border-indigo-500/30 text-indigo-300">
+                New Feature
+              </Pill>
+              <h2 className="text-3xl md:text-5xl font-extrabold text-white">
+                Get <span className="text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-cyan-400">SlixBlock</span> Extension
+              </h2>
+              <p className="text-slate-300 text-lg">
+                Your lightweight, non-intrusive phishing detection assistant. Protect yourself seamlessly across the web.
+              </p>
+              
+              <ul className="space-y-3">
+                {[
+                  'Real-time Auto Scan for visited websites',
+                  'Instant manual URL & Message scanning via popup',
+                  'Smart email integration (Gmail, Yahoo, Outlook)',
+                  'Floating color-coded alerts (Safe, Suspicious, Phishing)',
+                  'Zero data retention & high performance'
+                ].map((feature, i) => (
+                  <li key={i} className="flex items-center gap-3 text-slate-300">
+                    <div className="w-5 h-5 rounded-full bg-emerald-500/20 flex items-center justify-center flex-shrink-0">
+                      <Check className="w-3 h-3 text-emerald-400" />
+                    </div>
+                    <span className="font-medium text-sm md:text-base">{feature}</span>
+                  </li>
+                ))}
+              </ul>
+
+              <div className="pt-4">
+                <button className="flex items-center gap-2 px-8 py-4 bg-indigo-600 hover:bg-indigo-500 text-white font-bold rounded-full transition-all shadow-lg shadow-indigo-600/30 hover:shadow-indigo-500/50">
+                  <Download className="w-5 h-5" />
+                  Install for Chrome
+                </button>
+              </div>
+            </div>
+
+            <div className="flex-1 w-full max-w-sm relative">
+              <div className="absolute inset-0 bg-gradient-to-tr from-indigo-500/20 to-purple-500/20 blur-3xl -z-10 rounded-full"></div>
+              {/* Mockup of extension popup */}
+              <div className="bg-[#0f172a] rounded-xl border border-slate-700 shadow-2xl overflow-hidden flex flex-col w-full mx-auto" style={{ maxWidth: '320px' }}>
+                <div className="bg-slate-800 p-3 border-b border-slate-700 flex justify-between items-center">
+                  <div className="flex items-center gap-2 text-indigo-400 font-bold">
+                    <ShieldCheck className="w-5 h-5" />
+                    SlixBlock
+                  </div>
+                  <div className="w-8 h-4 bg-indigo-500 rounded-full relative">
+                    <div className="w-3 h-3 bg-white rounded-full absolute right-0.5 top-0.5"></div>
+                  </div>
+                </div>
+                <div className="p-4 space-y-4">
+                  <div className="flex gap-2">
+                    <div className="flex-1 pb-1 border-b-2 border-indigo-500 text-xs font-semibold text-center">URL</div>
+                    <div className="flex-1 pb-1 border-b-2 border-transparent text-slate-500 text-xs font-semibold text-center">Message</div>
+                  </div>
+                  <input type="text" disabled placeholder="https://example.com" className="w-full bg-slate-900 border border-slate-700 rounded p-2 text-sm text-slate-300" />
+                  <button className="w-full bg-gradient-to-r from-indigo-500 to-blue-500 py-2 rounded font-bold text-white text-sm shadow-md">Scan Now</button>
+                  <div className="mt-4 p-3 border-l-4 border-red-500 bg-red-500/10 rounded">
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-xs font-bold bg-red-500/20 text-red-400 px-2 py-0.5 rounded-full">PHISHING</span>
+                      <span className="text-xs text-slate-400">Score: 89.4</span>
+                    </div>
+                    <p className="text-xs text-slate-300">This URL strongly resembles known phishing patterns. Do not proceed.</p>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Floating alert mockup */}
+              <div className="absolute -bottom-6 -right-6 bg-slate-800 border-l-4 border-emerald-500 rounded-lg shadow-xl p-3 w-64 transform rotate-2 animate-pulse" style={{ animationDuration: '3s' }}>
+                <div className="flex justify-between items-center mb-1">
+                  <span className="text-xs font-semibold text-slate-200 truncate">google.com</span>
+                  <span className="text-[10px] font-bold bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded">SAFE</span>
+                </div>
+                <p className="text-[10px] text-slate-400">Analyzed by PhishGuard AI</p>
               </div>
             </div>
           </div>

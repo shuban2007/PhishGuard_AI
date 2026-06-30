@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SlixBlock</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="shield-icon"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+        <h1>SlixBlock</h1>
+      </div>
+      <div class="settings">
+        <label class="switch">
+          <input type="checkbox" id="auto-scan-toggle">
+          <span class="slider round"></span>
+        </label>
+        <span class="toggle-label" title="Auto scan websites">Auto Scan</span>
+      </div>
+    </header>
+
+    <main>
+      <div class="tabs">
+        <button class="tab-btn active" data-target="url-scan">URL</button>
+        <button class="tab-btn" data-target="message-scan">Message</button>
+      </div>
+
+      <div class="tab-content active" id="url-scan">
+        <input type="text" id="url-input" placeholder="Enter URL to scan..." autocomplete="off">
+      </div>
+
+      <div class="tab-content" id="message-scan">
+        <textarea id="message-input" placeholder="Paste email or message here..." rows="4"></textarea>
+        <p class="ai-powered-note">
+          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+          Powered by PhishGuard AI — ML + Keyword Intelligence
+        </p>
+      </div>
+
+      <button id="scan-btn" class="primary-btn">
+        <span>Scan Now</span>
+        <div class="loader hidden" id="scan-loader"></div>
+      </button>
+
+      <div id="result-container" class="hidden">
+        <div class="result-card" id="result-card">
+          <div class="result-header">
+            <span id="result-prediction" class="prediction badge"></span>
+            <span id="result-score" class="score"></span>
+          </div>
+          <div class="score-bar-wrapper">
+            <div class="score-bar" id="score-bar">
+              <div class="score-bar-fill" id="score-bar-fill"></div>
+            </div>
+            <div class="score-labels">
+              <span class="score-label safe-label">0 Safe</span>
+              <span class="score-label risk-label">100 Risk</span>
+            </div>
+          </div>
+          <p id="result-explanation" class="explanation"></p>
+        </div>
+      </div>
+
+      <!-- Score explanation note -->
+      <div class="info-note">
+        <div class="info-note-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+        </div>
+        <p class="info-note-text">
+          <strong>Trust Score:</strong> A lower score (closer to 0) means the site is <span class="safe-text">safer</span>. A higher score (closer to 100) indicates greater <span class="risk-text">risk</span> of phishing or harmful content.
+        </p>
+      </div>
+    </main>
+
+    <!-- Visit PhishGuard AI button -->
+    <footer>
+      <a href="https://phishguardai-byslixcrew.netlify.app" target="_blank" rel="noopener noreferrer" class="visit-site-btn" id="visit-site-btn">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+        <span>Visit PhishGuard AI</span>
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
+      </a>
+    </footer>
+  </div>
+  <script src="popup.js"></script>
+</body>
+</html>

@@ -1,30 +1,48 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { scanMessage } from '../api';
 import MessageResultCard from '../components/MessageResultCard';
 import { Loader2, ShieldCheck, Lock, Cpu, Layers, Brain, Zap } from 'lucide-react';
 
 const MessageScanner = () => {
+  const [searchParams] = useSearchParams();
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState(null);
   const [error, setError] = useState('');
+  const autoScanned = useRef(false);
 
-  const handleScan = async (e) => {
-    e.preventDefault();
-    if (!message) return;
-
+  // Core scan logic (reusable by both form submit and auto-scan)
+  const runScan = async (msg) => {
+    if (!msg) return;
     setLoading(true);
     setError('');
     setResult(null);
 
     try {
-      const data = await scanMessage(message);
+      const data = await scanMessage(msg);
       setResult(data);
     } catch (err) {
       setError(err?.message || 'Server error — make sure the backend is running.');
     } finally {
       setLoading(false);
     }
+  };
+
+  // Auto-scan when opened with ?message= query param (e.g. from SlixBlock extension)
+  useEffect(() => {
+    const prefilled = searchParams.get('message');
+    if (prefilled && !autoScanned.current) {
+      autoScanned.current = true;
+      const decoded = decodeURIComponent(prefilled);
+      setMessage(decoded);
+      runScan(decoded);
+    }
+  }, [searchParams]);
+
+  const handleScan = async (e) => {
+    e.preventDefault();
+    runScan(message);
   };
 
   return (

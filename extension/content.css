@@ -1,0 +1,116 @@
+/* Floating Alert */
+#slixblock-floating-alert {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  width: 300px;
+  background: #1e293b;
+  border-radius: 8px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+  z-index: 2147483647; /* Max z-index */
+  font-family: 'Inter', sans-serif, system-ui;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateX(50px);
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  pointer-events: none;
+}
+
+#slixblock-floating-alert.show {
+  opacity: 1;
+  transform: translateX(0);
+}
+
+.slix-header {
+  padding: 12px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.slix-domain {
+  color: #f8fafc;
+  font-weight: 600;
+  font-size: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 180px;
+}
+
+.slix-badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 12px;
+  text-transform: uppercase;
+}
+
+.slix-body {
+  padding: 12px 16px;
+  font-size: 13px;
+  color: #e2e8f0;
+  line-height: 1.4;
+}
+
+/* Status variants */
+.slix-safe { border-left: 4px solid #10b981; }
+.slix-safe .slix-badge { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+
+.slix-suspicious { border-left: 4px solid #f59e0b; }
+.slix-suspicious .slix-badge { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+
+.slix-phishing { border-left: 4px solid #ef4444; }
+.slix-phishing .slix-badge { background: rgba(239, 68, 68, 0.2); color: #f87171; }
+
+/* Email Banner */
+.slixblock-email-banner {
+  background: rgba(30, 41, 59, 0.95);
+  backdrop-filter: blur(8px);
+  border: 1px solid #334155;
+  border-radius: 8px;
+  padding: 10px 16px;
+  margin: 10px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: 'Inter', sans-serif;
+  color: #f8fafc;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  z-index: 1000;
+}
+
+.slix-banner-text {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.slix-banner-btn {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.slix-banner-btn:hover {
+  background: #2563eb;
+}
+
+/* Result popup over email */
+.slix-email-result {
+  margin-top: 8px;
+  padding: 12px;
+  border-radius: 6px;
+  font-size: 13px;
+  display: none;
+}
+.slix-email-result.show { display: block; }
